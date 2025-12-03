@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use App\Models\History;
-use App\Jobs\ProcessDocumentCorrection; 
+use App\Jobs\ProcessDocumentCorrection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException; // Tambahkan ini
 
 class DocumentController extends Controller
 {
@@ -24,22 +25,34 @@ class DocumentController extends Controller
 
     public function upload(Request $request)
     {
+        // 1. SECURITY: Validasi diperketat dengan ClamAV
+        // Pastikan package 'sunspikes/clamav-validator' sudah terinstall
         $request->validate([
-            'document_name' => 'required|string',
-            'file' => 'required|mimes:pdf|max:10240',
+            'document_name' => 'required|string|max:255', // Batasi panjang string
+            'file' => 'required|mimes:pdf|max:10240|clamav', // Tambahkan 'clamav' di sini
+        ], [
+            'file.clamav' => 'File terdeteksi mengandung virus atau malware dan telah ditolak.', // Custom message
+            'file.mimes' => 'Hanya file PDF yang diperbolehkan.',
+            'file.max' => 'Ukuran file maksimal 10MB.'
         ]);
+
         try {
             $file = $request->file('file');
             $document_name = $request->input('document_name');
 
-            $filename = time() . '_' . preg_replace('/[^A-Za-z0-9_-]/', '_', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.pdf';
+            // 2. SECURITY: Sanitasi Nama File Ekstra Aman
+            // Menggunakan UUID atau Random String di depan untuk mencegah tebakan file
+            $safeName = preg_replace('/[^A-Za-z0-9_-]/', '', pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
+            $filename = time() . '_' . Str::random(8) . '_' . $safeName . '.pdf';
+            
             $usedDisk = config('filesystems.default') ?: 'public';
+            
+            // Simpan file (File ini sudah dijamin bersih oleh validator di atas)
             $path = $file->storeAs('documents', $filename, $usedDisk);
 
-            \Log::info('Upload: stored file', [
+            \Log::info('Upload: stored clean file', [
                 'file_path' => $path,
                 'disk' => $usedDisk,
-                'db_driver' => config('database.default'),
                 'user_id' => Auth::id(),
             ]);
 
@@ -48,15 +61,10 @@ class DocumentController extends Controller
                 'file_name' => $document_name,
                 'file_location' => $path,
                 'disk' => $usedDisk,
-                'upload_status' => 'Processing', 
+                'upload_status' => 'Processing',
             ]);
 
             \Log::info('DEBUG UPLOAD: Path Absolut', ['resolved_path' => \Storage::disk($usedDisk)->path($path)]);
-
-            \Log::info('Upload: created Document record', [
-                'document_id' => $document->id,
-                'file_location' => $document->file_location,
-            ]);
 
             History::create([
                 'user_id' => Auth::id(),
@@ -67,11 +75,21 @@ class DocumentController extends Controller
 
             ProcessDocumentCorrection::dispatch($document);
 
-            return redirect()->route('correction.status', $document->id) 
-                             ->with('success', 'Dokumen berhasil diunggah dan sedang diproses...');
+            return redirect()->route('correction.status', $document->id)
+                             ->with('success', 'Dokumen berhasil diunggah (Aman dari Virus) dan sedang diproses...');
+
+        } catch (ValidationException $e) {
+            // Tangkap error validasi virus secara spesifik jika perlu logging tambahan
+            throw $e; 
         } catch (\Throwable $e) {
             \Log::error('Upload failed', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            return back()->with('error', 'Terjadi kesalahan saat mengunggah dokumen. Silakan coba lagi.');
+            
+            // Hapus file jika sempat terupload sebagian (cleanup)
+            if (isset($path) && Storage::disk($usedDisk)->exists($path)) {
+                Storage::disk($usedDisk)->delete($path);
+            }
+
+            return back()->with('error', 'Terjadi kesalahan sistem saat mengunggah dokumen.');
         }
     }
 

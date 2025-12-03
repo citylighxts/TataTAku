@@ -5,7 +5,7 @@
 
     RewriteEngine On
     
-    RewriteBase /TataKata/ 
+    RewriteBase /TataTAku/ 
 
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
