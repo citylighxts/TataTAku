@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,12 +12,15 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    public function boot()
+    public function boot(): void
     {
-        if (config('app.url')) {
-            $this->app['url']->forceRootUrl(config('app.url'));
+        if($this->app->environment('production')) {
+            URL::forceScheme('https');
         }
 
-        $this->app['url']->forceScheme('https');
+        $appUrl = config('app.url');
+        if ($appUrl) {
+            URL::forceRootUrl($appUrl);
+        }
     }
 }
