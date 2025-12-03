@@ -14,10 +14,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        if (env('APP_URL')) {
-            $this->app['url']->forceRootUrl(env('APP_URL'));
-            
-            $this->app['url']->forceScheme('http');
+        if (config('app.url')) {
+            $this->app['url']->forceRootUrl(config('app.url'));
         }
+
+        $this->app['url']->forceScheme('https');
     }
 }
