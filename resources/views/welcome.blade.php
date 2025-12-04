@@ -317,35 +317,31 @@
                 </div>
 
                 <div class="space-y-4">
-                    <h3 class="text-lg font-bold transition-colors duration-500 theme-title">Kontak</h3>
+                    <h3 class="text-lg font-bold transition-colors duration-500 theme-title">Tutorial Penggunaan Website</h3>
                     <ul class="space-y-3 theme-footer-text">
+
+                        <!--ICON VIDEO -->
                         <li class="flex items-center gap-3 group hover:text-[#85BBEB] transition-colors duration-300">
                             <div class="w-8 h-8 rounded-lg bg-[#85BBEB]/10 border border-[#85BBEB]/30 flex items-center justify-center group-hover:bg-[#85BBEB]/20 transition-all duration-300">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                                    <!-- Ikon Video -->
+                                    <path d="M4 4h8a2 2 0 012 2v2l4-2v8l-4-2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2z"/>
                                 </svg>
                             </div>
-                            info@tatataku.com
+                            <a href="https://youtu.be/CDeVoO-POnA?si=pgJUyJas9ra3UUbI" class="hover:text-[#85BBEB] transition-colors duration-300">Panduan Penggunaan Website TataTAku</a>
                         </li>
-                        <li class="flex items-center gap-3 group hover:text-[#85BBEB] transition-colors duration-300">
-                            <div class="w-8 h-8 rounded-lg bg-[#85BBEB]/10 border border-[#85BBEB]/30 flex items-center justify-center group-hover:bg-[#85BBEB]/20 transition-all duration-300">
-                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
-                                </svg>
-                            </div>
-                            Surabaya, Indonesia
-                        </li>
+
                     </ul>
                 </div>
+
             </div>
 
             <div class="border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4 transition-colors duration-500 theme-footer-border">
                 <p class="text-sm theme-footer-text">&copy; {{ date('Y') }} TataTAku. Semua hak dilindungi.</p>
-                <div class="flex gap-6 text-sm theme-footer-text">
-                    <a href="#" class="hover:text-[#85BBEB] transition-colors duration-300">Kebijakan Privasi</a>
-                    <a href="#" class="hover:text-[#85BBEB] transition-colors duration-300">Syarat & Ketentuan</a>
-                </div>
+                <!-- <div class="flex gap-6 text-xl theme-footer-text">
+                    <a class="hover:text-[#85BBEB] transition-colors duration-300">Tutorial Penggunaan Website:</a>
+                    <a href="https://youtu.be/CDeVoO-POnA?si=pgJUyJas9ra3UUbI" class="hover:text-[#85BBEB] transition-colors duration-300">Klik Di sini</a>
+                </div> -->
             </div>
         </div>
     </footer>
