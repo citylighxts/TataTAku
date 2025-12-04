@@ -199,11 +199,11 @@
                                         <span class="text-sm transition-colors duration-500 theme-subtitle group-hover:text-[#FEF9F0]">Ingat saya</span>
                                     </label>
 
-                                    @if (Route::has('password.request'))
+                                    <!-- @if (Route::has('password.request'))
                                         <a href="{{ route('password.request') }}" class="text-sm text-[#85BBEB] transition-colors duration-300 forgot-password-link">
                                             Lupa kata sandi?
                                         </a>
-                                    @endif
+                                    @endif -->
                                 </div>
 
                                 {{-- Submit Button --}}
