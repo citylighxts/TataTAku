@@ -75,13 +75,13 @@
         {{-- Breadcrumb --}}
         <div class="absolute left-0 w-screen z-10">
             <a href="{{ route('dashboard') }}"
-                class="flex items-center gap-2 transition-colors duration-300 group fade-in-up px-4 pt-2 theme-breadcrumb">
+                class="flex items-center gap-2 hover:text-[#85BBEB] transition-colors duration-300 group fade-in-up px-4 pt-2 theme-breadcrumb">
                 <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform"
                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
                 <span class="font-medium">Kembali ke Beranda</span>
-=            </a>
+            </a>
         </div>
 
         {{-- Main Content --}}
