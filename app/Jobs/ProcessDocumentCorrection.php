@@ -87,6 +87,18 @@ class ProcessDocumentCorrection implements ShouldQueue
             $pages = $pdf->getPages();
             Log::info("Total pages found: " . count($pages), ['document_id' => $this->documentId]);
 
+            $structureValidation = $this->validateDocumentStructure($pages);
+            
+            if (!$structureValidation['valid']) {
+                Log::warning("Document structure validation failed for ID {$this->documentId}: {$structureValidation['message']}");
+                $document->update([
+                    'upload_status' => 'Invalid_Format',
+                    'details' => $structureValidation['message']
+                ]);
+                $this->pushProgress($document, 'Validasi gagal: ' . $structureValidation['message'], 'Invalid_Format');
+                return;
+            }
+
             $chapters_data = $this->splitByBab($pages); 
             
             if (empty($chapters_data)) {
@@ -329,4 +341,44 @@ class ProcessDocumentCorrection implements ShouldQueue
 
         return $subbabList;
     }
-}
+
+    private function validateDocumentStructure(array $pages): array
+    {
+        $totalPages = count($pages);
+        
+        if ($totalPages < 20) {
+            return [
+                'valid' => false,
+                'message' => 'Dokumen memiliki kurang dari 20 halaman. Ini tidak sesuai dengan format Tugas Akhir.'
+            ];
+        }
+        
+        $foundChapters = 0;
+        $allText = '';
+        
+        foreach ($pages as $page) {
+            $text = strtoupper($this->cleanPageText($page->getText()));
+            $allText .= ' ' . $text;
+            
+            if (preg_match('/\b(?:BAB|ВАВ)\s+[IVX1-9]/i', $text)) {
+                $foundChapters++;
+            }
+        }
+        
+        if ($foundChapters < 3) {
+            return [
+                'valid' => false,
+                'message' => 'Dokumen tidak memiliki struktur BAB yang memadai. TA harus memiliki minimal 3 BAB.'
+            ];
+        }
+        
+        if (stripos($allText, 'DAFTAR ISI') === false) {
+            return [
+                'valid' => false,
+                'message' => 'Dokumen tidak memiliki Daftar Isi. Pastikan file yang diunggah adalah Tugas Akhir yang lengkap.'
+            ];
+        }
+        
+        return ['valid' => true, 'message' => 'Valid'];
+    }
+    }

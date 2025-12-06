@@ -56,6 +56,19 @@ class DocumentController extends Controller
                 'user_id' => Auth::id(),
             ]);
 
+
+            // ===== VALIDASI TA =====
+            $fullPath = Storage::disk($usedDisk)->path($path);
+            $validation = $this->validateThesisDocument($fullPath);
+            
+            if (!$validation['valid']) {
+                Storage::disk($usedDisk)->delete($path);
+                
+                return back()
+                    ->withInput()
+                    ->with('error', $validation['message']); // Hanya gunakan session flash
+            }
+
             $document = Document::create([
                 'user_id' => Auth::id(),
                 'file_name' => $document_name,
@@ -79,12 +92,10 @@ class DocumentController extends Controller
                              ->with('success', 'Dokumen berhasil diunggah (Aman dari Virus) dan sedang diproses...');
 
         } catch (ValidationException $e) {
-            // Tangkap error validasi virus secara spesifik jika perlu logging tambahan
             throw $e; 
         } catch (\Throwable $e) {
             \Log::error('Upload failed', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             
-            // Hapus file jika sempat terupload sebagian (cleanup)
             if (isset($path) && Storage::disk($usedDisk)->exists($path)) {
                 Storage::disk($usedDisk)->delete($path);
             }
@@ -294,6 +305,68 @@ class DocumentController extends Controller
         } catch (\Throwable $e) {
             \Log::error('Debug Upload failed', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
             return back()->with('error', 'Terjadi kesalahan saat memproses file testcase.');
+        }
+    }
+
+    private function validateThesisDocument($filePath): array
+    {
+        try {
+            $parser = new Parser();
+            $pdf = $parser->parseFile($filePath);
+            $text = '';
+            
+            $pages = $pdf->getPages();
+            $maxPages = min(10, count($pages));
+            
+            for ($i = 0; $i < $maxPages; $i++) {
+                $text .= $pages[$i]->getText();
+            }
+            
+            $text = strtoupper($text);
+            
+            $thesisIndicators = [
+                'TUGAS AKHIR',
+                'SKRIPSI',
+                'THESIS',
+                'UNDERGRADUATE THESIS',
+                'FINAL PROJECT',
+                'DAFTAR ISI',
+                'BAB I',
+                'BAB 1',
+                'PENDAHULUAN',
+                'ABSTRAK',
+                'ABSTRACT',
+            ];
+            
+            $foundIndicators = 0;
+            foreach ($thesisIndicators as $indicator) {
+                if (strpos($text, $indicator) !== false) {
+                    $foundIndicators++;
+                }
+            }
+            
+            if ($foundIndicators < 2) {
+                return [
+                    'valid' => false,
+                    'message' => 'File PDF yang diunggah tidak terdeteksi sebagai dokumen Tugas Akhir. Pastikan file berisi struktur TA yang lengkap (Abstrak, Daftar Isi, BAB I, dll).'
+                ];
+            }
+            
+            if (count($pages) < 20) {
+                return [
+                    'valid' => false,
+                    'message' => 'Dokumen terlalu pendek untuk menjadi Tugas Akhir.'
+                ];
+            }
+            
+            return ['valid' => true, 'message' => 'Dokumen valid'];
+            
+        } catch (\Exception $e) {
+            \Log::error('PDF Validation Error: ' . $e->getMessage());
+            return [
+                'valid' => false,
+                'message' => 'File PDF rusak atau tidak dapat dibaca. Pastikan file PDF Anda valid.'
+            ];
         }
     }
 }

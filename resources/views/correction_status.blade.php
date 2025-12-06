@@ -157,8 +157,50 @@
                             errorEl.innerText = data.details;
                             errorEl.classList.remove('hidden');
                         }
-
-                    } else if (data.status === 'Failed') {
+                    } 
+                    else if (data.status === 'Invalid_Format') {
+                        if (pollingIntervalId !== null) { clearInterval(pollingIntervalId); }
+                        
+                        docInfo.classList.add('hidden');
+                        mainTitle.innerText = "Dokumen Bukan Format TA 📄";
+                        statusDisplay.innerHTML = `
+                            <div class="flex flex-col items-center gap-4">
+                                <svg class="w-20 h-20 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                                <div class="text-center space-y-2">
+                                    <p class="text-lg font-semibold text-red-400">File yang Anda unggah bukan Tugas Akhir yang valid</p>
+                                    <p class="text-sm theme-subtitle">Pastikan file PDF berisi struktur TA lengkap:</p>
+                                    <ul class="text-sm theme-subtitle text-left inline-block">
+                                        <li>✓ Halaman Judul</li>
+                                        <li>✓ Abstrak</li>
+                                        <li>✓ Daftar Isi</li>
+                                        <li>✓ BAB I, BAB II, dst (minimal 3 BAB)</li>
+                                        <li>✓ Minimal 20 halaman</li>
+                                    </ul>
+                                </div>
+                                <a href="{{ route('dashboard') }}"
+                                class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-[#85BBEB] to-[#85BBEB] text-[#0A0A2E] rounded-full hover:shadow-2xl hover:shadow-[#85BBEB]/60 hover:scale-105 transition-all duration-300 font-bold text-lg relative overflow-hidden group">
+                                    <span class="relative z-10 flex items-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3"/>
+                                        </svg>
+                                        Unggah Dokumen Baru
+                                    </span>
+                                    <div class="absolute inset-0 bg-gradient-to-r from-[#FEF9F0]/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                                </a>
+                            </div>
+                        `;
+                        statusMessage.innerText = "Dokumen tidak memenuhi kriteria TA.";
+                        
+                        const errorEl = document.getElementById('error-message');
+                        if (data.details) {
+                            errorEl.innerText = data.details;
+                            errorEl.classList.remove('hidden');
+                        }
+                    }
+                    
+                    else if (data.status === 'Failed') {
                         if (pollingIntervalId !== null) { clearInterval(pollingIntervalId); }
                         
                         docInfo.classList.add('hidden');
