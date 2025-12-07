@@ -255,6 +255,87 @@
         </div>
     </section>
 
+    {{-- Tutorial Section --}}
+    <section class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20" id="tutorial">
+        <div class="text-center mb-12 fade-in-up">
+            <h2 class="text-3xl lg:text-4xl font-bold mb-4 transition-colors duration-500 theme-title">
+                Panduan <span class="gradient-text-section">Penggunaan</span>
+            </h2>
+            <p class="text-xl transition-colors duration-500 theme-subtitle">
+                Pelajari cara menggunakan fitur TataTAku
+            </p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            
+            <div class="relative group fade-in-up" style="animation-delay: 0.1s;">
+                <div class="absolute inset-0 bg-[#85BBEB]/20 blur-2xl rounded-2xl group-hover:bg-[#85BBEB]/30 transition-all duration-500"></div>
+                <div class="relative rounded-2xl overflow-hidden border border-[#85BBEB]/30 shadow-2xl bg-black">
+                    <a href="https://youtu.be/CDeVoO-POnA" target="_blank" class="block relative w-full h-[300px] sm:h-[400px] group cursor-pointer overflow-hidden">
+                        
+                        <img 
+                            src="https://img.youtube.com/vi/CDeVoO-POnA/maxresdefault.jpg" 
+                            alt="Tutorial Preview" 
+                            class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                        >
+
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors duration-300"></div>
+
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="relative w-20 h-20 flex items-center justify-center">
+                                <div class="absolute inset-0 bg-[#FF0000] rounded-full animate-ping opacity-20 group-hover:opacity-40"></div>
+                                <div class="relative w-16 h-16 bg-[#FF0000] rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                    <svg class="w-8 h-8 text-white fill-current ml-1" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-6 left-0 right-0 text-center">
+                            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-white text-sm font-medium group-hover:bg-black/80 transition-colors">
+                                <svg class="w-4 h-4 text-[#FF0000]" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                                </svg>
+                                Tonton Tutorial
+                            </span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="fade-in-up" style="animation-delay: 0.2s;">
+                <div class="relative theme-card rounded-2xl p-8 border backdrop-blur-xl transition-all duration-500 theme-card-inner">
+                    <div class="flex items-start gap-6">
+                        <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-[#85BBEB] to-[#FEF9F0] rounded-xl flex items-center justify-center shadow-lg">
+                            <svg class="w-8 h-8 text-[#0A0A2E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-4">
+                            <h3 class="text-2xl font-bold theme-card-title">Buku Petunjuk Lengkap</h3>
+                            <p class="leading-relaxed theme-card-text">
+                                Lebih suka membaca? Unduh dokumen panduan lengkap (PDF) yang berisi instruksi langkah demi langkah, tips penggunaan, dan penjelasan fitur secara mendetail.
+                            </p>
+                            
+                            <div class="pt-2">
+                                <a href="{{ asset('files/Buku-Petunjuk.pdf') }}" target="_blank" class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#85BBEB] to-[#85BBEB] text-[#0A0A2E] rounded-full hover:shadow-lg hover:shadow-[#85BBEB]/40 hover:-translate-y-1 transition-all duration-300 font-semibold group relative overflow-hidden">
+                                    <span class="relative z-10 flex items-center gap-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                        </svg>
+                                        Unduh PDF
+                                    </span>
+                                    <div class="absolute inset-0 bg-gradient-to-r from-[#FEF9F0]/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     {{-- CTA Section --}}
     <section class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div class="relative fade-in-up">
